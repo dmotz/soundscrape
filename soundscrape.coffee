@@ -7,35 +7,32 @@ http = require 'http'
 fs   = require 'fs'
 
 rootHost = 'soundcloud.com'
+page = 1
 argLen = process.argv.length
 
 
-if argLen < 2
-  return console.log 'pass an artist name!'
+scrape = ->
+  http.get
+    host: rootHost
+    path: '/' + artist + '/' + (if trackName? then trackName else 'tracks?page=' + page)
+  , (res) ->
+    data = ''
+    res.on 'data', (chunk) ->
+      data += chunk
 
-artist = process.argv[2]
+    res.on 'end', ->
+      tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
 
-if argLen > 3
-  trackName = process.argv[3]
-
-
-http.get
-  host: rootHost
-  path: '/' + artist + (if trackName? then '/' + trackName else '')
-, (res) ->
-  data = ''
-  res.on 'data', (chunk) ->
-    data += chunk
-
-  res.on 'end', ->
-    tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
-
-    if trackName?
-      download parse tracks[0]
-    else
-      download parse track for track in tracks
-
-    console.log ''
+      if trackName?
+        download parse tracks[0]
+        console.log ''
+      else
+        download parse track for track in tracks
+        if tracks.length is 10
+          page++
+          scrape()
+        else
+          console.log ''
 
 
 parse = (raw) ->
@@ -64,3 +61,14 @@ download = (obj) ->
           file.end()
           console.log '\x1b[32mdone:     ' + title + '\x1b[0m'
 
+
+
+if argLen < 2
+  return console.log 'pass an artist name!'
+
+artist = process.argv[2]
+
+if argLen > 3
+  trackName = process.argv[3]
+
+scrape()
