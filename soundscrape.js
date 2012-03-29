@@ -31,10 +31,10 @@
       return data += chunk;
     });
     return res.on('end', function() {
-      var t, tracks, _i, _len;
+      var track, tracks, _i, _len;
       tracks = data.match(/(window\.SC\.bufferTracks\.push\().+(?=\);)/gi);
       for (_i = 0, _len = tracks.length; _i < _len; _i++) {
-        t = tracks[_i];
+        track = tracks[_i];
         download(JSON.parse(track.substr(28)));
       }
       return console.log('');

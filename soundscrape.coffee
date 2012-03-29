@@ -29,7 +29,7 @@ http.get
 
   res.on 'end', ->
     tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
-    download JSON.parse track.substr 28 for t in tracks
+    download JSON.parse track.substr 28 for track in tracks
     console.log ''
 
 download = (obj) ->
