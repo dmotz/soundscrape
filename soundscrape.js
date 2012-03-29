@@ -5,7 +5,7 @@
 */
 
 (function() {
-  var argLen, artist, download, fs, http, rootHost, track;
+  var argLen, artist, download, fs, http, parse, rootHost, trackName;
 
   http = require('http');
 
@@ -19,11 +19,11 @@
 
   artist = process.argv[2];
 
-  if (argLen > 3) track = process.argv[3];
+  if (argLen > 3) trackName = process.argv[3];
 
   http.get({
     host: rootHost,
-    path: '/' + artist + (track != null ? '/' + track : '')
+    path: '/' + artist + (trackName != null ? '/' + trackName : '')
   }, function(res) {
     var data;
     data = '';
@@ -33,13 +33,21 @@
     return res.on('end', function() {
       var track, tracks, _i, _len;
       tracks = data.match(/(window\.SC\.bufferTracks\.push\().+(?=\);)/gi);
-      for (_i = 0, _len = tracks.length; _i < _len; _i++) {
-        track = tracks[_i];
-        download(JSON.parse(track.substr(28)));
+      if (trackName != null) {
+        download(parse(tracks[0]));
+      } else {
+        for (_i = 0, _len = tracks.length; _i < _len; _i++) {
+          track = tracks[_i];
+          download(parse(track));
+        }
       }
       return console.log('');
     });
   });
+
+  parse = function(raw) {
+    return JSON.parse(raw.substr(28));
+  };
 
   download = function(obj) {
     var title;

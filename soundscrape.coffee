@@ -16,12 +16,12 @@ if argLen < 2
 artist = process.argv[2]
 
 if argLen > 3
-  track = process.argv[3]
+  trackName = process.argv[3]
 
 
 http.get
   host: rootHost
-  path: '/' + artist + (if track? then '/' + track else '')
+  path: '/' + artist + (if trackName? then '/' + trackName else '')
 , (res) ->
   data = ''
   res.on 'data', (chunk) ->
@@ -29,8 +29,18 @@ http.get
 
   res.on 'end', ->
     tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
-    download JSON.parse track.substr 28 for track in tracks
+
+    if trackName?
+      download parse tracks[0]
+    else
+      download parse track for track in tracks
+
     console.log ''
+
+
+parse = (raw) ->
+  JSON.parse raw.substr 28
+
 
 download = (obj) ->
   artist = obj.user.username
