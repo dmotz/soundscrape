@@ -5,7 +5,7 @@
         "name" : "Dan Motzenbecker",
         "url" : "http://github.com/dmotz"
     },
-    "bin": { "oxen" : "./soundscrape.js" },
+    "bin": { "soundscrape" : "./soundscrape.js" },
     "repository" : { "type" : "git", "url" : "http://github.com/dmotz/soundscrape.git" },
     "description" : "SoundCloud command line downloader",
     "keywords" : ["soundcloud"],
