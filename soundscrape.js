@@ -80,7 +80,7 @@
         host = 'ak-media.' + rootHost;
         return http.get({
           host: host,
-          path: res.headers.location.substr(host.length)
+          path: res.headers.location.substr(('http://' + host).length)
         }, function(res) {
           var file;
           file = fs.createWriteStream('./' + artist + ' - ' + title + '.mp3');

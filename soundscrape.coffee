@@ -62,7 +62,7 @@ download = (obj) ->
       host = 'ak-media.' + rootHost
       http.get
         host: host
-        path: res.headers.location.substr host.length
+        path: res.headers.location.substr ('http://' + host).length
       , (res) ->
         file = fs.createWriteStream './' + artist + ' - ' + title + '.mp3'
 
