@@ -1,4 +1,4 @@
-
+#!/usr/bin/env node
 /*
  * soundscrape
  * SoundCloud command line downloader
