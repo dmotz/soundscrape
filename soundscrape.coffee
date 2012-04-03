@@ -51,7 +51,8 @@ parse = (raw) ->
 
 download = (obj) ->
   return if !obj
-  title  = obj.title
+  artist = obj.user.username.replace /[^\w|\s]/g, ''
+  title  = obj.title.replace /[^\w|\s]/g, ''
   console.log '\x1b[33m' + 'fetching: ' + title + '\x1b[0m'
   http.get
     host: 'media.' + rootHost
@@ -62,7 +63,7 @@ download = (obj) ->
       host = 'ak-media.' + rootHost
       http.get
         host: host
-        path: res.headers.location.substr ('http://' + host).length
+        path: url.parse(res.headers.location).path
       , (res) ->
         file = fs.createWriteStream './' + artist + ' - ' + title + '.mp3'
 

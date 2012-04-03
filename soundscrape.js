@@ -70,8 +70,8 @@
   download = function(obj) {
     var artist, title;
     if (!obj) return;
-    artist = obj.user.username;
-    title = obj.title;
+    artist = obj.user.username.replace(/[^\w|\s]/g, '');
+    title = obj.title.replace(/[^\w|\s]/g, '');
     console.log('\x1b[33m' + 'fetching: ' + title + '\x1b[0m');
     return http.get({
       host: 'media.' + rootHost,
