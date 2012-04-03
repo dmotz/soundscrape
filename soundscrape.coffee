@@ -8,6 +8,7 @@
 
 http = require 'http'
 fs   = require 'fs'
+url  = require 'url'
 
 rootHost = 'soundcloud.com'
 page     = 1
@@ -50,7 +51,6 @@ parse = (raw) ->
 
 download = (obj) ->
   return if !obj
-  artist = obj.user.username
   title  = obj.title
   console.log '\x1b[33m' + 'fetching: ' + title + '\x1b[0m'
   http.get

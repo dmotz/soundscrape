@@ -7,11 +7,13 @@
 */
 
 (function() {
-  var argLen, download, fs, http, init, page, params, parse, rootHost, scrape;
+  var argLen, download, fs, http, init, page, params, parse, rootHost, scrape, url;
 
   http = require('http');
 
   fs = require('fs');
+
+  url = require('url');
 
   rootHost = 'soundcloud.com';
 
@@ -80,7 +82,7 @@
         host = 'ak-media.' + rootHost;
         return http.get({
           host: host,
-          path: res.headers.location.substr(('http://' + host).length)
+          path: url.parse(res.headers.location).path
         }, function(res) {
           var file;
           file = fs.createWriteStream('./' + artist + ' - ' + title + '.mp3');
