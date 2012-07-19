@@ -60,10 +60,10 @@ download = (obj) ->
   , (res) ->
 
     res.on 'end', ->
-      host = 'ak-media.' + rootHost
+      mediaUrl = url.parse res.headers.location
       http.get
-        host: host
-        path: url.parse(res.headers.location).path
+        host: mediaUrl.host
+        path: mediaUrl.path
       , (res) ->
         file = fs.createWriteStream './' + artist + ' - ' + title + '.mp3'
 
