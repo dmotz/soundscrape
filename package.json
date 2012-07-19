@@ -8,7 +8,7 @@
     "bin": { "soundscrape" : "./index.js" },
     "repository" : { "type" : "git", "url" : "http://github.com/dmotz/soundscrape.git" },
     "description" : "SoundCloud command line downloader",
-    "keywords" : ["soundcloud"],
+    "keywords" : ["soundcloud", "cli"],
     "version" : "0.1.4",
     "preferGlobal" : "true",
     "dependencies" : {
