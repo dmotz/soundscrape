@@ -9,7 +9,7 @@
     "repository" : { "type" : "git", "url" : "http://github.com/dmotz/soundscrape.git" },
     "description" : "SoundCloud command line downloader",
     "keywords" : ["soundcloud"],
-    "version" : "0.0.3",
+    "version" : "0.1.4",
     "preferGlobal" : "true",
     "dependencies" : {
         "coffee-script" : "1.3.x"
