@@ -51,8 +51,9 @@ parse = (raw) ->
 
 download = (obj) ->
   return if !obj
-  artist = obj.user.username.replace /[^\w|\s]/g, ''
-  title  = obj.title.replace /[^\w|\s]/g, ''
+  regEx = /&\w+;|[^\w|\s]/g
+  artist = obj.user.username.replace regEx, ''
+  title  = obj.title.replace regEx, ''
   console.log '\x1b[33m' + 'fetching: ' + title + '\x1b[0m'
   http.get
     host: 'media.' + rootHost
