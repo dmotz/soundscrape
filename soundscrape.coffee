@@ -21,15 +21,14 @@ params   = {}
 scrape = ->
   http.get
     host: rootHost
-    path: '/' + params.artist + '/' +
-      (if params.trackName? then params.trackName else 'tracks?page=' + page)
+    path: "/#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }"
   , (res) ->
 
     data = ''
     res.on 'data', (chunk) -> data += chunk
     res.on 'end', ->
       tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
-      if params.trackName?
+      if params.trackName
         download parse tracks[0]
         console.log ''
       else
@@ -53,9 +52,9 @@ parse = (raw) ->
 
 download = (obj) ->
   return if !obj
-  regEx = /&\w+;|[^\w|\s]/g
-  artist = obj.user.username.replace regEx, ''
-  title  = obj.title.replace regEx, ''
+  pattern = /&\w+;|[^\w|\s]/g
+  artist = obj.user.username.replace pattern, ''
+  title  = obj.title.replace pattern, ''
   console.log '\x1b[33m' + 'fetching: ' + title + '\x1b[0m'
   http.get
     host: 'media.' + rootHost
