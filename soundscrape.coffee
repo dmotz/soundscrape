@@ -88,7 +88,7 @@ init = ->
     process.exit 1
 
   writeTest.end()
-  fs.unlink testFile, (err) -> if err? then console.log err
+  fs.unlink testFile, (err) -> console.log err if err
 
   params.artist = process.argv[2]
   params.trackName = process.argv[3] if argLen > 3
