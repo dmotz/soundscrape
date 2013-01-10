@@ -17,10 +17,21 @@ $ npm install -g soundscrape
 ```
 $ soundscrape claque
 ```
+(that's me)
+
 
 #### Download a single track:
 
 ```
-$ soundscrape claque cargo-cult
+$ soundscrape claque diver
 ```
-(that's me ^)
+
+Hyphenate track names with spaces (use the URL endpoint as your guide):
+
+```
+$ soundscrape claque hotel-splendid
+```
+
+Files are downloaded in parallel to the directory you ran `soundscrape` from.
+
+Have fun; use it ethically.
