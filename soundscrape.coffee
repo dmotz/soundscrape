@@ -12,26 +12,24 @@ http = require 'http'
 fs   = require 'fs'
 url  = require 'url'
 
-rootHost = 'soundcloud.com'
-page     = 1
-argLen   = process.argv.length
-params   = {}
+page       = 1
+trackCount = downloaded = 0
+argLen     = process.argv.length
+params     = {}
 
 
 scrape = ->
-  http.get
-    host: rootHost
-    path: "/#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }"
-  , (res) ->
-
+  http.get "http://soundcloud.com/#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }", (res) ->
     data = ''
     res.on 'data', (chunk) -> data += chunk
     res.on 'end', ->
       tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
       if params.trackName
+        trackCount = 1
         download parse tracks[0]
         console.log ''
       else
+        trackCount += tracks.length
         download parse track for track in tracks
         if tracks.length is 10
           page++
@@ -56,23 +54,14 @@ download = (obj) ->
   artist = obj.user.username.replace pattern, ''
   title  = obj.title.replace pattern, ''
   console.log "\x1b[33mfetching: #{ title }\x1b[0m"
-  http.get
-    host: 'media.' + rootHost
-    path: obj.streamUrl.match /\/stream\/.+/
-  , (res) ->
-
-    res.on 'end', ->
-      mediaUrl = url.parse res.headers.location
-      http.get
-        host: mediaUrl.host
-        path: mediaUrl.path
-      , (res) ->
-        file = fs.createWriteStream "./#{ artist } - #{ title }.mp3"
-
-        res.on 'data', (chunk) -> file.write chunk
-        res.on 'end', ->
-          file.end()
-          console.log "\x1b[32mdone:     #{ title }\x1b[0m"
+  http.get obj.streamUrl, (res) ->
+    http.get res.headers.location, (res) ->
+      file = fs.createWriteStream "./#{ artist } - #{ title }.mp3"
+      res.on 'data', (chunk) -> file.write chunk
+      res.on 'end', ->
+        file.end()
+        console.log "\x1b[32mdone:     #{ title }\x1b[0m"
+        process.exit 0 if ++downloaded is trackCount
 
 
 init = ->
