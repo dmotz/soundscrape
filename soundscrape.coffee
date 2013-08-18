@@ -10,7 +10,6 @@
 
 http = require 'http'
 fs   = require 'fs'
-url  = require 'url'
 
 page       = 1
 trackCount = downloaded = 0
