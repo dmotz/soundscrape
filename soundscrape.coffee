@@ -48,10 +48,8 @@ download = (obj) ->
   console.log "\x1b[33m  fetching: #{ title }  \x1b[0m"
   http.get obj.streamUrl, (res) ->
     http.get res.headers.location, (res) ->
-      file = fs.createWriteStream "./#{ outputDir }/#{ artist } - #{ title }.mp3"
-      res.on 'data', (chunk) -> file.write chunk
+      res.pipe fs.createWriteStream "./#{ outputDir }/#{ artist } - #{ title }.mp3"
       res.on 'end', ->
-        file.end()
         console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
         if ++downloaded is trackCount
           console.log "\n\x1b[32m  wrote #{ downloaded } " +
