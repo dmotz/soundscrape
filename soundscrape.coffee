@@ -3,7 +3,7 @@
 ###
  * soundscrape
  * SoundCloud command line downloader
- * Dan Motzenbecker <motzdc@gmail.com>
+ * Dan Motzenbecker <dan@oxism.com>
  * MIT License
 ###
 
