@@ -15,11 +15,10 @@ baseUrl    = 'http://soundcloud.com/'
 rx         = /bufferTracks\.push\((\{.+?\})\)/g
 trackCount = downloaded = 0
 argLen     = process.argv.length
-params     = {}
 
 
-scrape = (page) ->
-  http.get "#{ baseUrl }#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }", (res) ->
+scrape = (page, artist, title) ->
+  http.get "#{ baseUrl }#{ artist }/#{ title or 'tracks?page=' + page }", (res) ->
     data = ''
     res.on 'data', (chunk) -> data += chunk
     res.on 'end', ->
@@ -28,7 +27,7 @@ scrape = (page) ->
         scrape ++page unless ++trackCount % 10
 
       unless trackCount
-        console.log "\x1b[31m  #{ if params.trackName then 'track' else 'artist' } not found  \x1b[0m"
+        console.log "\x1b[31m  #{ if title then 'track' else 'artist' } not found  \x1b[0m"
         process.exit 1
 
 
