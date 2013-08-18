@@ -33,12 +33,10 @@ scrape = (page) ->
 
 
 parse = (raw) ->
-  chaff = raw.indexOf '{'
-  return false if chaff is -1
   try
-    JSON.parse raw.substr chaff
-  catch e
-    console.log '\x1b[31mcouldn\'t parse this page.\x1b[0m'
+    JSON.parse raw
+  catch
+    console.log '\x1b[31m  couldn\'t parse the page \x1b[0m'
     process.exit 1
 
 
