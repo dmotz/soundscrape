@@ -42,10 +42,10 @@ parse = (raw) ->
 
 download = (obj) ->
   return unless obj
-  artist = obj.user.username.replace pattern, ''
-  title  = obj.title.replace pattern, ''
   console.log "\x1b[33mfetching: #{ title }\x1b[0m"
   pattern = /&\w+;|[^\w\s\(\)\-]/g
+  artist  = obj.user.username.replace(pattern, '').trim()
+  title   = obj.title.replace(pattern, '').trim()
   http.get obj.streamUrl, (res) ->
     http.get res.headers.location, (res) ->
       file = fs.createWriteStream "./#{ artist } - #{ title }.mp3"
