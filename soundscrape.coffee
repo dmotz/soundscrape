@@ -11,14 +11,13 @@
 http = require 'http'
 fs   = require 'fs'
 
-page       = 1
 trackCount = downloaded = 0
 argLen     = process.argv.length
 params     = {}
 
 
-scrape = ->
   http.get "http://soundcloud.com/#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }", (res) ->
+scrape = (page) ->
     data = ''
     res.on 'data', (chunk) -> data += chunk
     res.on 'end', ->
@@ -80,7 +79,7 @@ init = ->
 
   params.artist = process.argv[2]
   params.trackName = process.argv[3] if argLen > 3
-  scrape()
+  scrape 1
 
 
 init()
