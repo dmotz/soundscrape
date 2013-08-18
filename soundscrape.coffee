@@ -78,17 +78,13 @@ makeDir = (artist, n, cb) ->
       makeDir artist, ++n, cb
 
 
+if process.argv.length < 3
+  console.log '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
+  process.exit 1
 
-init = ->
-  if process.argv.length < 3
-    console.log '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
-    process.exit 1
+[_, _, artist, title] = process.argv
 
-  [_, _, artist, title] = process.argv
+makeDir artist, 0, (path) ->
+  outputDir = path
+  scrape 1, artist, title
 
-  makeDir artist, 0, (path) ->
-    outputDir = path
-    scrape 1, artist, title
-
-
-init()
