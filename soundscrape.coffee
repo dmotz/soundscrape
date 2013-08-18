@@ -52,7 +52,11 @@ download = (obj) ->
       res.on 'end', ->
         file.end()
         console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
-        process.exit 0 if ++downloaded is trackCount
+        if ++downloaded is trackCount
+          console.log "\n\x1b[32m  wrote #{ downloaded } files to ./#{ outputDir }  \x1b[0m\n"
+          process.exit 0
+
+
 fsErr = ->
   console.log '\x1b[31m  you don\'t have permission to write files here  \x1b[0m'
   process.exit 1
