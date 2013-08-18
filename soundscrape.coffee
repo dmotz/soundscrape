@@ -42,36 +42,36 @@ parse = (raw) ->
 
 download = (obj) ->
   return unless obj
-  console.log "\x1b[33mfetching: #{ title }\x1b[0m"
   pattern = /&\w+;|[^\w\s\(\)\-]/g
   artist  = obj.user.username.replace(pattern, '').trim()
   title   = obj.title.replace(pattern, '').trim()
+  console.log "\x1b[33m  fetching: #{ title }  \x1b[0m"
   http.get obj.streamUrl, (res) ->
     http.get res.headers.location, (res) ->
       file = fs.createWriteStream "./#{ artist } - #{ title }.mp3"
       res.on 'data', (chunk) -> file.write chunk
       res.on 'end', ->
         file.end()
-        console.log "\x1b[32mdone:     #{ title }\x1b[0m"
+        console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
         process.exit 0 if ++downloaded is trackCount
 
 
 init = ->
   if argLen <= 2
-    console.log '\x1b[31mpass an artist name!\x1b[0m'
+    console.log '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
     process.exit 1
 
   testFile = '.soundscrape_' + Date.now()
   try
     writeTest = fs.createWriteStream testFile
-  catch e
-    console.log '\x1b[31myou don\'t have permission to write files here\x1b[0m'
+  catch
+    console.log '\x1b[31m  you don\'t have permission to write files here  \x1b[0m'
     process.exit 1
 
   writeTest.end()
   fs.unlink testFile, (err) -> console.log err if err
 
-  params.artist = process.argv[2]
+  params.artist    = process.argv[2]
   params.trackName = process.argv[3] if argLen > 3
   scrape 1
 
