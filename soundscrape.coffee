@@ -11,29 +11,25 @@
 http = require 'http'
 fs   = require 'fs'
 
+baseUrl    = 'http://soundcloud.com/'
+rx         = /bufferTracks\.push\((\{.+?\})\)/g
 trackCount = downloaded = 0
 argLen     = process.argv.length
 params     = {}
 
 
-  http.get "http://soundcloud.com/#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }", (res) ->
 scrape = (page) ->
+  http.get "#{ baseUrl }#{ params.artist }/#{ params.trackName or 'tracks?page=' + page }", (res) ->
     data = ''
     res.on 'data', (chunk) -> data += chunk
     res.on 'end', ->
-      tracks = data.match /(window\.SC\.bufferTracks\.push\().+(?=\);)/gi
-      if params.trackName
-        trackCount = 1
-        download parse tracks[0]
-        console.log ''
-      else
-        trackCount += tracks.length
-        download parse track for track in tracks
-        if tracks.length is 10
-          page++
-          scrape()
-        else
-          console.log ''
+      while track = rx.exec data
+        download parse track[1]
+        scrape ++page unless ++trackCount % 10
+
+      unless trackCount
+        console.log "\x1b[31m  #{ if params.trackName then 'track' else 'artist' } not found  \x1b[0m"
+        process.exit 1
 
 
 parse = (raw) ->
