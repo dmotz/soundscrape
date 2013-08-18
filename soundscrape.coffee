@@ -53,7 +53,8 @@ download = (obj) ->
         file.end()
         console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
         if ++downloaded is trackCount
-          console.log "\n\x1b[32m  wrote #{ downloaded } files to ./#{ outputDir }  \x1b[0m\n"
+          console.log "\n\x1b[32m  wrote #{ downloaded } " +
+            "#{ if trackCount is 1 then 'file' else 'files' } to ./#{ outputDir }  \x1b[0m\n"
           process.exit 0
 
 
