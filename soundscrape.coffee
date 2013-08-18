@@ -14,7 +14,6 @@ fs   = require 'fs'
 baseUrl    = 'http://soundcloud.com/'
 rx         = /bufferTracks\.push\((\{.+?\})\)/g
 trackCount = downloaded = 0
-argLen     = process.argv.length
 
 
 scrape = (page, artist, title) ->
@@ -56,7 +55,7 @@ download = (obj) ->
 
 
 init = ->
-  if argLen <= 2
+  if process.argv.length < 3
     console.log '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
     process.exit 1
 
@@ -69,9 +68,8 @@ init = ->
 
   writeTest.end()
   fs.unlink testFile, (err) -> console.log err if err
+  [_, _, artist, title] = process.argv
 
-  params.artist    = process.argv[2]
-  params.trackName = process.argv[3] if argLen > 3
   scrape 1
 
 
