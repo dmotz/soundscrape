@@ -25,6 +25,7 @@ scrape = (page, artist, title) ->
       while track = rx.exec data
         download parse track[1]
         scrape ++page unless ++trackCount % 10
+        return if title
 
       unless trackCount
         console.log "\x1b[31m  #{ if title then 'track' else 'artist' } not found  \x1b[0m"
