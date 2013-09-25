@@ -15,6 +15,7 @@ baseUrl    = 'http://soundcloud.com/'
 rx         = /bufferTracks\.push\((\{.+?\})\)/g
 trackCount = downloaded = 0
 outputDir  = null
+start      = new Date
 
 
 scrape = (page, artist, title) ->
@@ -55,7 +56,8 @@ download = (obj) ->
         console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
         if ++downloaded is trackCount
           console.log "\n\x1b[32m  wrote #{ downloaded } " +
-            "#{ if trackCount is 1 then 'file' else 'files' } to ./#{ outputDir }  \x1b[0m\n"
+            "#{ if trackCount is 1 then 'file' else 'files' } to ./#{ outputDir }"
+          console.log "  took #{ new Date - start }ms  \x1b[0m\n"
           process.exit 0
 
     .on 'error', netErr
