@@ -31,6 +31,8 @@ scrape = (page, artist, title) ->
         console.log "\x1b[31m  #{ if title then 'track' else 'artist' } not found  \x1b[0m"
         process.exit 1
 
+  .on 'error', netErr
+
 
 parse = (raw) ->
   try
@@ -56,9 +58,17 @@ download = (obj) ->
             "#{ if trackCount is 1 then 'file' else 'files' } to ./#{ outputDir }  \x1b[0m\n"
           process.exit 0
 
+    .on 'error', netErr
+  .on 'error', netErr
+
 
 fsErr = ->
   console.log '\x1b[31m  you don\'t have permission to write files here  \x1b[0m'
+  process.exit 1
+
+
+netErr = (e) ->
+  console.log '\x1b[31m  network error:  \x1b[0m', e
   process.exit 1
 
 
