@@ -24,7 +24,7 @@ scrape = (page, artist, title) ->
     res.on 'end', ->
       while track = rx.exec data
         download parse track[1]
-        scrape ++page unless ++trackCount % 10
+        scrape ++page, artist, title unless ++trackCount % 10
         return if title
 
       unless trackCount
