@@ -11,6 +11,7 @@
 http = require 'http'
 fs   = require 'fs'
 
+{argv}     = process
 baseUrl    = 'http://soundcloud.com/'
 trackCount = downloaded = 0
 outputDir  = null
@@ -93,11 +94,11 @@ if process.argv.length < 3
   console.error '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
   process.exit 1
 
-makeDir process.argv[2], 0, (path) ->
+makeDir argv[2], 0, (path) ->
   outputDir = path
-  if process.argv.length is 3
-    scrape 1, process.argv[2]
+  if argv.length is 3
+    scrape 1, argv[2]
   else
-    for n in [3...process.argv.length]
-      scrape 1, process.argv[2], process.argv[n]
+    for n in [3...argv.length]
+      scrape 1, argv[2], argv[n]
 
