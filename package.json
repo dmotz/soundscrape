@@ -1,20 +1,31 @@
 {
-    "name" : "soundscrape",
-    "homepage" : "http://github.com/dmotz/soundscrape",
-    "author" : {
-        "name" : "Dan Motzenbecker",
-        "url" : "http://github.com/dmotz"
-    },
-    "bin": { "soundscrape" : "./soundscrape.coffee" },
-    "repository" : { "type" : "git", "url" : "http://github.com/dmotz/soundscrape.git" },
-    "description" : "SoundCloud command line downloader",
-    "keywords" : ["soundcloud", "cli", "scraper"],
-    "version" : "0.1.9",
-    "preferGlobal" : "true",
-    "dependencies" : {
-        "coffee-script" : "1.6.x"
-    },
-    "engines": {
-      "node": "0.10.x"
-    }
+  "name": "soundscrape",
+  "homepage": "http://github.com/dmotz/soundscrape",
+  "author": {
+    "name": "Dan Motzenbecker",
+    "url": "http://github.com/dmotz"
+  },
+  "bin": {
+    "soundscrape": "./soundscrape.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/dmotz/soundscrape.git"
+  },
+  "description": "SoundCloud command line downloader",
+  "keywords": [
+    "soundcloud",
+    "cli",
+    "scraper",
+    "audio"
+  ],
+  "version": "0.2.0",
+  "preferGlobal": "true",
+  "dependencies": {
+    "coffee-script": "1.6.x",
+    "ear-pipe": "0.0.x"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
 }
