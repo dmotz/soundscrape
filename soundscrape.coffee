@@ -29,7 +29,7 @@ scrape = (page, artist, title) ->
         return if title
 
       unless trackCount
-        console.log "\x1b[31m  #{ if title then 'track' else 'artist' } not found  \x1b[0m"
+        console.error "\x1b[31m  #{ if title then 'track' else 'artist' } not found  \x1b[0m"
         process.exit 1
 
   .on 'error', netErr
@@ -39,7 +39,7 @@ parse = (raw) ->
   try
     JSON.parse raw
   catch
-    console.log '\x1b[31m  couldn\'t parse the page \x1b[0m'
+    console.error '\x1b[31m  couldn\'t parse the page \x1b[0m'
     process.exit 1
 
 
@@ -65,12 +65,12 @@ download = (obj) ->
 
 
 fsErr = ->
-  console.log '\x1b[31m  you don\'t have permission to write files here  \x1b[0m'
+  console.error '\x1b[31m  you don\'t have permission to write files here  \x1b[0m'
   process.exit 1
 
 
 netErr = (e) ->
-  console.log '\x1b[31m  network error:  \x1b[0m', e
+  console.error '\x1b[31m  network error:  \x1b[0m', e
   process.exit 1
 
 
@@ -83,14 +83,14 @@ makeDir = (artist, n, cb) ->
           fsErr() if err
           cb path
       else
-        console.log err
+        console.error err
         fsErr()
     else
       makeDir artist, ++n, cb
 
 
 if process.argv.length < 3
-  console.log '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
+  console.error '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
   process.exit 1
 
 makeDir process.argv[2], 0, (path) ->
