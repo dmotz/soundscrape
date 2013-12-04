@@ -16,6 +16,7 @@ baseUrl    = 'http://soundcloud.com/'
 trackCount = downloaded = 0
 outputDir  = null
 start      = new Date
+play       = false
 
 
 scrape = (page, artist, title) ->
@@ -49,11 +50,17 @@ download = (obj) ->
   pattern = /&\w+;|[^\w\s\(\)\-]/g
   artist  = obj.user.username.replace(pattern, '').trim()
   title   = obj.title.replace(pattern, '').trim()
-  console.log "\x1b[33m  fetching: #{ title }  \x1b[0m"
+  console.log "\x1b[33m  fetching: #{ title }  \x1b[0m" unless play
   http.get obj.streamUrl, (res) ->
     http.get res.headers.location, (res) ->
-      res.pipe fs.createWriteStream "./#{ outputDir }/#{ artist } - #{ title }.mp3"
+      if play
+        console.log "\x1b[32m  playing:  #{ title }  \x1b[0m"
+        res.pipe earPipe
+      else
+        res.pipe fs.createWriteStream "./#{ outputDir }/#{ artist } - #{ title }.mp3"
+
       res.on 'end', ->
+        process.exit 0 if play
         console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
         if ++downloaded is trackCount
           console.log "\n\x1b[32m  wrote #{ downloaded } " +
@@ -71,6 +78,7 @@ fsErr = ->
 
 
 netErr = (e) ->
+  return if play and e.code is 'ECONNRESET'
   console.error '\x1b[31m  network error:  \x1b[0m', e
   process.exit 1
 
@@ -90,15 +98,33 @@ makeDir = (artist, n, cb) ->
       makeDir artist, ++n, cb
 
 
-if process.argv.length < 3
+if (i = argv.indexOf '-p') > -1 or (i = argv.indexOf '--play') > -1
+  play = true
+  argv.splice i, 1
+  earPipe = new (require 'ear-pipe')
+  earPipe.process.on 'error', (err) ->
+    console.error err
+    process.exit 1
+
+
+if argv.length < 3
   console.error '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
   process.exit 1
 
-makeDir argv[2], 0, (path) ->
-  outputDir = path
-  if argv.length is 3
-    scrape 1, argv[2]
-  else
-    for n in [3...argv.length]
-      scrape 1, argv[2], argv[n]
+
+if play
+  unless argv[3]
+    console.error '\x1b[31m  play mode only works with a single track name  \x1b[0m'
+    process.exit 1
+
+  scrape 1, argv[2], argv[3]
+
+else
+  makeDir argv[2], 0, (path) ->
+    outputDir = path
+    if argv.length is 3
+      scrape 1, argv[2]
+    else
+      for n in [3...argv.length]
+        scrape 1, argv[2], argv[n]
 
