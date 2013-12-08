@@ -103,7 +103,11 @@ if (i = argv.indexOf '-p') > -1 or (i = argv.indexOf '--play') > -1
   argv.splice i, 1
   earPipe = new (require 'ear-pipe')
   earPipe.process.on 'error', (err) ->
-    console.error err
+    if err.code is 'ENOENT'
+      console.error '\x1b[31m  SoX is required for audio playback and does not appear to be installed  \x1b[0m'
+    else
+      console.error '\x1b[31m  error:  \x1b[0m'
+      console.error err
     process.exit 1
 
 
