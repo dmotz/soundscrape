@@ -6,7 +6,7 @@
     "url": "http://github.com/dmotz"
   },
   "bin": {
-    "soundscrape": "./soundscrape.coffee"
+    "soundscrape": "./index.js"
   },
   "repository": {
     "type": "git",

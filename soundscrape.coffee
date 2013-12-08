@@ -1,5 +1,3 @@
-#!/usr/bin/env coffee
-
 ###
  * soundscrape
  * SoundCloud command line downloader
