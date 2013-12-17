@@ -15,6 +15,9 @@ trackCount = downloaded = 0
 outputDir  = null
 start      = new Date
 play       = false
+log        = console.log.bind   console, '\x1b[32m  '
+logWait    = console.log.bind   console, '\x1b[33m  '
+logErr     = console.error.bind console, '\x1b[31m  '
 
 
 scrape = (page, artist, title) ->
@@ -29,7 +32,7 @@ scrape = (page, artist, title) ->
         return if title
 
       unless trackCount
-        console.error "\x1b[31m  #{ if title then 'track' else 'artist' } not found  \x1b[0m"
+        logErr "#{ if title then 'track' else 'artist' } not found"
         process.exit 1
 
   .on 'error', netErr
@@ -39,7 +42,7 @@ parse = (raw) ->
   try
     JSON.parse raw
   catch
-    console.error '\x1b[31m  couldn\'t parse the page \x1b[0m'
+    logErr 'couldn\'t parse the page'
     process.exit 1
 
 
@@ -48,22 +51,22 @@ download = (obj) ->
   pattern = /&\w+;|[^\w\s\(\)\-]/g
   artist  = obj.user.username.replace(pattern, '').trim()
   title   = obj.title.replace(pattern, '').trim()
-  console.log "\x1b[33m  fetching: #{ title }  \x1b[0m" unless play
+  logWait 'fetching: ' + title unless play
   http.get obj.streamUrl, (res) ->
     http.get res.headers.location, (res) ->
       if play
-        console.log "\x1b[32m  playing:  #{ title }  \x1b[0m"
+        log "playing:  #{ title }\n"
         res.pipe earPipe
       else
         res.pipe fs.createWriteStream "./#{ outputDir }/#{ artist } - #{ title }.mp3"
 
       res.on 'end', ->
         process.exit 0 if play
-        console.log "\x1b[32m  done:     #{ title }  \x1b[0m"
+        log 'done:     ' + title
         if ++downloaded is trackCount
-          console.log "\n\x1b[32m  wrote #{ downloaded } " +
-            "#{ if trackCount is 1 then 'file' else 'files' } to ./#{ outputDir }"
-          console.log "  took #{ new Date - start }ms  \x1b[0m\n"
+          log()
+          log "wrote #{ downloaded } file#{ ('s' if downloaded > 1) or '' } to ./#{ outputDir }"
+          log "took about #{ s = Math.round (new Date - start) / 1000 } second#{ ('s' if s isnt 1) or '' }\n"
           process.exit 0
 
     .on 'error', netErr
@@ -71,13 +74,13 @@ download = (obj) ->
 
 
 fsErr = ->
-  console.error '\x1b[31m  you don\'t have permission to write files here  \x1b[0m'
+  logErr 'you don\'t have permission to write files here'
   process.exit 1
 
 
 netErr = (e) ->
   return if play and e.code is 'ECONNRESET'
-  console.error '\x1b[31m  network error:  \x1b[0m', e
+  logErr 'network error:  ', e
   process.exit 1
 
 
@@ -90,7 +93,7 @@ makeDir = (artist, n, cb) ->
           fsErr() if err
           cb path
       else
-        console.error err
+        logErr err
         fsErr()
     else
       makeDir artist, ++n, cb
@@ -102,21 +105,20 @@ if (i = argv.indexOf '-p') > -1 or (i = argv.indexOf '--play') > -1
   earPipe = new (require 'ear-pipe')
   earPipe.process.on 'error', (err) ->
     if err.code is 'ENOENT'
-      console.error '\x1b[31m  SoX is required for audio playback and does not appear to be installed  \x1b[0m'
+      logErr 'SoX is required for audio playback and does not appear to be installed'
     else
-      console.error '\x1b[31m  error:  \x1b[0m'
-      console.error err
+      logErr 'error:', err
     process.exit 1
 
 
 if argv.length < 3
-  console.error '\x1b[31m  pass an artist name as the first argument  \x1b[0m'
+  logErr 'pass an artist name as the first argument'
   process.exit 1
 
 
 if play
   unless argv[3]
-    console.error '\x1b[31m  play mode only works with a single track name  \x1b[0m'
+    logErr 'play mode only works with a single track name'
     process.exit 1
 
   scrape 1, argv[2], argv[3]
