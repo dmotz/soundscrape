@@ -1,6 +1,8 @@
 # soundscrape
+#### SoundCloud command line player / downloader
+[Dan Motzenbecker](http://oxism.com), MIT License
 
-SoundCloud command line player / downloader
+[@dcmotz](http://twitter.com/dcmotz)
 
 
 ### Installation:
