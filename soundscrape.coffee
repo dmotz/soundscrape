@@ -6,8 +6,9 @@
 ###
 
 
-http = require 'http'
-fs   = require 'fs'
+http         = require 'http'
+fs           = require 'fs'
+StreamSnitch = require 'stream-snitch'
 
 {argv}     = process
 baseUrl    = 'http://soundcloud.com/'
@@ -22,15 +23,13 @@ logErr     = console.error.bind console, '\x1b[31m  '
 
 scrape = (page, artist, title) ->
   http.get "#{ baseUrl }#{ artist }/#{ title or 'tracks?page=' + page }", (res) ->
-    data = ''
-    res.on 'data', (chunk) -> data += chunk
-    res.on 'end', ->
-      rx = /bufferTracks\.push\((\{.+?\})\)/g
-      while track = rx.exec data
-        download parse track[1]
-        scrape ++page, artist, title unless ++trackCount % 10
-        return if title
+    snitch = new StreamSnitch /bufferTracks\.push\((\{.+?\})\)/g
+    snitch[if title then 'once' else 'on'] 'match', (match) ->
+      download parse match[1]
+      scrape ++page, artist, title unless ++trackCount % 10
 
+    res.pipe snitch
+    res.on 'end', ->
       unless trackCount
         logErr "#{ if title then 'track' else 'artist' } not found"
         process.exit 1
