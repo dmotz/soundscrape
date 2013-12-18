@@ -3,7 +3,8 @@
   "homepage": "http://github.com/dmotz/soundscrape",
   "author": {
     "name": "Dan Motzenbecker",
-    "url": "http://github.com/dmotz"
+    "url": "http://oxism.com",
+    "email": "dan@oxism.com"
   },
   "bin": {
     "soundscrape": "./index.js"
@@ -23,9 +24,10 @@
   "preferGlobal": "true",
   "dependencies": {
     "coffee-script": "1.6.x",
-    "ear-pipe": "0.0.x"
+    "ear-pipe": "0.0.x",
+    "stream-snitch": "0.0.x"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": ">=0.10.x"
   }
 }
