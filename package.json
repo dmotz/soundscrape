@@ -20,10 +20,10 @@
     "scraper",
     "audio"
   ],
-  "version": "0.2.2",
+  "version": "0.2.3",
   "preferGlobal": "true",
   "dependencies": {
-    "coffee-script": "1.6.x",
+    "coffee-script": "1.7.x",
     "ear-pipe": "0.0.x",
     "stream-snitch": "0.0.x"
   },
